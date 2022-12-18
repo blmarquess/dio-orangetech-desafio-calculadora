@@ -4,12 +4,18 @@ export const MainBoard = styled.div`
   width: 480px;
   height: 100%;
   display: grid;
-  grid-template-columns: 8fr;
-  grid-template-rows: 10vh 80vh 10vh;
-  grid-template-areas: "display display display" "keyboard keyboard keyboard" "keyboard keyboard keyboard";
-  grid-gap: 1rem;
+  grid-template-columns: 1fr;
+  grid-template-rows: 15vh 50vh;
+  grid-template-areas:
+    "display"
+    "keyboard";
+  grid-gap: 2px;
   padding: 1rem;
-  margin: 0 auto;
+  margin: auto;
   box-sizing: border-box;
   background-color: #514e4e59;
+  border-radius: 8px;
+  font-size: 2rem;
+  font-weight: 700;
 `;
+// atual em 303.44
