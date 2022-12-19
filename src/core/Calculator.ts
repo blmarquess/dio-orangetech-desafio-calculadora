@@ -19,7 +19,7 @@ export class Calculator {
     return num1 / num2;
   }
 
-  static Execute(num1: number, operator: string, num2: number) {
-    return new Calculator().operatorStrategy[operator](num1, num2);
+  static Execute(number1: number, operator: string, number2: number): number {
+    return new Calculator().operatorStrategy[operator](number1, number2);
   }
 }

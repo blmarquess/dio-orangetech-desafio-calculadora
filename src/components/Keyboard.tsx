@@ -9,8 +9,8 @@ export const KeyboardDisplay = styled.div`
   grid-template-areas: "numbers operations";
   grid-gap: 1px;
   box-sizing: border-box;
-  border-radius: 0 0 8px 8px;
-  background-color: #393434b9;
+  border-radius: 8px;
+  background-color: #39343493;
   font-size: 2rem;
   font-weight: 700;
   padding: 0.1rem;

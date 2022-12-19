@@ -5,7 +5,7 @@ export const MainBoard = styled.div`
   height: 100%;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 15vh 50vh;
+  grid-template-rows: 15vh 62vh;
   grid-template-areas:
     "display"
     "keyboard";

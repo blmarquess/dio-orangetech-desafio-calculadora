@@ -10,6 +10,6 @@ export const KeyboardNumber = styled.div`
   justify-content: space-between;
   box-sizing: border-box;
   border-radius: 8px;
-  font-size: 2rem;
+  font-size: 1rem;
   font-weight: 700;
 `;
