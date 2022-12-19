@@ -1,6 +1,4 @@
 import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "@next/font/google";
 import { NumberButton } from "../components/NumberButton";
 import { MainBoard } from "../components/MainBoard";
 import { CalculateDisplay } from "../components/CalculateDisplay";
@@ -9,10 +7,74 @@ import { KeyboardNumber } from "../components/KeyboardNumber";
 import { KeyboardOperations } from "../components/KeyboardOperations";
 import { ButtonBackspace } from "../components/buttonBackSpace";
 import { KeyboardDisplay } from "../components/Keyboard";
+import { useCallback, useState } from "react";
+import { Calculator } from "../core/Calculator";
 
-const inter = Inter({ subsets: ["latin"] });
+type Operation = {
+  lastNumber: number;
+  operation: string | null;
+};
 
 export default function Home() {
+  const [number, setNumber] = useState("0");
+
+  const backspace = useCallback(
+    () => setNumber((prev) => prev.slice(0, -1)),
+    []
+  );
+
+  const [memo, setMemo] = useState<Operation>({
+    lastNumber: 0,
+    operation: null,
+  });
+
+  const resetCalc = useCallback(() => {
+    setNumber("0");
+    setMemo({ lastNumber: 0, operation: null });
+  }, []);
+
+  const setOperation = useCallback(
+    (operation: string) => {
+      if (operation !== "=") {
+        const lastNumber = Calculator.Execute(
+          memo.lastNumber,
+          operation,
+          Number(number)
+        );
+        setMemo({ lastNumber, operation });
+        setNumber("0");
+        return;
+      }
+
+      if (operation === "=" && memo.operation) {
+        const result = Calculator.Execute(
+          memo.lastNumber,
+          memo.operation,
+          Number(number)
+        );
+        setMemo({ lastNumber: 0, operation: null });
+        return setNumber(result.toString());
+      }
+    },
+    [memo, number, setMemo]
+  );
+
+  const updateNumber = useCallback(
+    (value: string) => {
+      if (number === "0") {
+        return setNumber(value);
+      }
+      if (memo.operation) {
+        setMemo((prev) => ({
+          ...prev,
+          lastNumber: Number(number),
+        }));
+        return setOperation(memo.operation);
+      }
+      return setNumber((prev) => prev + value);
+    },
+    [memo.operation, number, setOperation]
+  );
   return (
     <>
       <Head>
@@ -23,31 +85,33 @@ export default function Home() {
       </Head>
 
       <MainBoard>
-        <CalculateDisplay>0254021</CalculateDisplay>
+        <CalculateDisplay>{number}</CalculateDisplay>
 
         <KeyboardDisplay>
           <KeyboardNumber>
-            <OperationBoard>AC</OperationBoard>
+            <OperationBoard onClick={resetCalc}>AC</OperationBoard>
             <OperationBoard>%</OperationBoard>
-            <OperationBoard>{ButtonBackspace}</OperationBoard>
-            <NumberButton>1</NumberButton>
-            <NumberButton>2</NumberButton>
-            <NumberButton>3</NumberButton>
-            <NumberButton>4</NumberButton>
-            <NumberButton>5</NumberButton>
-            <NumberButton>6</NumberButton>
-            <NumberButton>7</NumberButton>
-            <NumberButton>8</NumberButton>
-            <NumberButton>9</NumberButton>
-            <NumberButton>0</NumberButton>
-            <NumberButton>.</NumberButton>
+            <OperationBoard onClick={backspace}>
+              {ButtonBackspace}
+            </OperationBoard>
+            <NumberButton onClick={() => updateNumber("1")}>1</NumberButton>
+            <NumberButton onClick={() => updateNumber("2")}>2</NumberButton>
+            <NumberButton onClick={() => updateNumber("3")}>3</NumberButton>
+            <NumberButton onClick={() => updateNumber("4")}>4</NumberButton>
+            <NumberButton onClick={() => updateNumber("5")}>5</NumberButton>
+            <NumberButton onClick={() => updateNumber("6")}>6</NumberButton>
+            <NumberButton onClick={() => updateNumber("7")}>7</NumberButton>
+            <NumberButton onClick={() => updateNumber("8")}>8</NumberButton>
+            <NumberButton onClick={() => updateNumber("9")}>9</NumberButton>
+            <NumberButton onClick={() => updateNumber("0")}>0</NumberButton>
+            <NumberButton onClick={() => updateNumber(".")}>,</NumberButton>
           </KeyboardNumber>
           <KeyboardOperations>
-            <OperationBoard>+</OperationBoard>
-            <OperationBoard>-</OperationBoard>
-            <OperationBoard>x</OperationBoard>
-            <OperationBoard>/</OperationBoard>
-            <OperationBoard>=</OperationBoard>
+            <OperationBoard onClick={() => setOperation("+")}>+</OperationBoard>
+            <OperationBoard onClick={() => setOperation("-")}>-</OperationBoard>
+            <OperationBoard onClick={() => setOperation("*")}>x</OperationBoard>
+            <OperationBoard onClick={() => setOperation("/")}>/</OperationBoard>
+            <OperationBoard onClick={() => setOperation("=")}>=</OperationBoard>
           </KeyboardOperations>
         </KeyboardDisplay>
       </MainBoard>
